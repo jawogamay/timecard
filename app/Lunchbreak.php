@@ -8,7 +8,7 @@ class Lunchbreak extends Model
 {
     //
     protected $fillable = [
-        'userinfo_id','schedule_id','started_at','stopped_at','timecard_id','overbreak'
+        'userinfo_id','schedule_id','started_at','stopped_at','timecard_id','overbreak','time_outexpire'
     ];
 
     public function userinfo(){

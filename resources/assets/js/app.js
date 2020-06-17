@@ -17,6 +17,7 @@ import { Form, HasError, AlertError } from 'vform';
 import NProgress from 'nprogress'
 import VueBootstrap4Table from 'vue-bootstrap4-table'
 import RealtimeFirstBreak from './components/RealtimeFirstbreak'
+import RealtimeLunchBreak from './components/RealtimeLunch'
 import RealtimeOthers from './components/RealtimeOthers'
 import Reactivate from './components/Reactivate'
 /*import '../node_modules/bootstrap/dist/css/bootstrap.min.css'*/
@@ -93,6 +94,10 @@ let routes = [
     {
       path:'/realtimefirstbreak',
       component:RealtimeFirstBreak
+    },
+    {
+      path:'/realtimelunch',
+      component:RealtimeLunchBreak
     },
     {
       path:'/idlelogs',

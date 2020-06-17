@@ -21,6 +21,7 @@ class CreateLunchbreaksTable extends Migration
             $table->unsignedInteger('userinfo_id');
             $table->boolean('overbreak')->default(FALSE);
             $table->unsignedInteger('timecard_id');
+            $table->timestamp('time_outexpire');
             $table->double('hours')->default(0);
             $table->double('minutes')->default(0);
             $table->timestamps();

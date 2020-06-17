@@ -17,7 +17,7 @@
                     <!-- {{new Date(clock.userinfo.schedule.created_at).getTime() - new Date(clock.time_in).getTime()}} -->
                     <td > <countdown :time="new Date(clock.time_outexpire) - new Date()">
                       <template slot-scope="props">{{ props.hours }} hours, {{ props.minutes }} minutes, {{ props.seconds }} seconds.</template>
-                    </countdown>&nbsp; <span class="btn btn-danger btn-xs" v-if="clock.late_flag===1">Late</span> </td>
+                    </countdown>&nbsp; </td>
                     <td><button class="btn btn-danger" @click="clockout(clock.id)">Clock Out</button> </td>
                    <!--  {{clock.time_in | format_date}}
                     {{newYear}}
@@ -56,7 +56,7 @@ import moment from 'moment'
         },
         methods:{
             getRealtime(){
-                axios.get('/getRealtime').then(response => {
+                axios.get('/getRealtimeLunch').then(response => {
                     this.realtimeclocks = response.data
                     this.startTimer(this.realtimeclocks)
                 })
@@ -72,7 +72,7 @@ import moment from 'moment'
                     confirmButtonText: 'Yes'
                 }).then((result)=> {
                     if(result.value){
-                        axios.put('/updatetimecard/'+id).then(()=> {
+                        axios.put('/lunchbreak/'+id).then(()=> {
                             toast.fire({
                                 icon:'success',
                                 title:'Clock In Submitted'

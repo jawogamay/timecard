@@ -23,6 +23,12 @@ class TimecardExport implements FromQuery,WithMapping,WithHeadings,ShouldAutoSiz
     }
     public function map($timecard):array
     {
+        $string;
+        if($timecard->overbreak == 1){
+            $string = "Yes";
+        }else{
+            $string = "No";
+        }
         return[
             $timecard->id,
             $timecard->userinfo->user->name,
@@ -30,6 +36,7 @@ class TimecardExport implements FromQuery,WithMapping,WithHeadings,ShouldAutoSiz
             $timecard->time_out,
             $timecard->hours,
             $timecard->minutes,
+            $string
         ];
     }
     public function headings():array
@@ -41,7 +48,7 @@ class TimecardExport implements FromQuery,WithMapping,WithHeadings,ShouldAutoSiz
             'Time Out',
             'Hours Spent',
             'Minutes Spent',
-            'Overbreak'
+            'Overbreak',
 
         ];
     }

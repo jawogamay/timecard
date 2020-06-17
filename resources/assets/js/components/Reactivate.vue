@@ -15,7 +15,7 @@
                     <td> {{reactivate.userinfo.user.name}}</td>
                     <td>{{reactivate.time_in | dateWithTime}}</td>
                     <td>{{reactivate.time_out | dateWithTime}}</td>
-                    <td><button class="btn btn-danger" @click="reactivateUser(reactivate.id)">Reactivate <button class="btn btn-danger" @click="reactivateUser(reactivate.id)">Comment</button></button></td>
+                    <td><button class="btn btn-danger" @click="reactivateUser(reactivate.id)">Reactivate </button></td>
 
                 </tr>
             </tbody>

@@ -6,6 +6,7 @@ use App\Lunchbreak;
 use App\Timecard;
 use App\UserInfo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Auth;
 class LunchbreakController extends Controller
 {
@@ -44,17 +45,23 @@ class LunchbreakController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function getRealtimeLunch()
+    {
+        return Lunchbreak::whereBetween('created_at', [now()->subHours(12), now()])->where('stopped_at',null)->with(['userinfo.user','userinfo.schedule'])->get();
+    }
     public function store(Request $request)
     {
         //
          $user = UserInfo::where('user_id',Auth::user()->id)->latest()->limit(1)->get();
        $schedule = $user->first()->schedule_id;
+       $date = Carbon::parse(NOW())->addHour(1);
        //Store First Break in Database
         Lunchbreak::create([
             'started_at' => NOW(),
             'userinfo_id' => Auth::user()->id,
             'schedule_id' => $schedule,
-            'timecard_id' => $request['timecard_id']
+            'timecard_id' => $request['timecard_id'],
+            'time_outexpire' => $date
         ]);
         //Update to is Working Status
 
@@ -62,6 +69,7 @@ class LunchbreakController extends Controller
         $timecard->update([
             'is_working' => FALSE,
         ]);
+        Auth::logout();
         return 'Success';
     }
 
@@ -98,15 +106,27 @@ class LunchbreakController extends Controller
     {
         //\
          $break = Lunchbreak::findOrFail($lunchbreak->id);
+         $to =  Carbon::parse($break->started_at);
+         $from = Carbon::parse($break->stopped_at);
+         $diff_in_minutes = $to->diffInHours($from);
         $break->update([
             'stopped_at' => NOW()
         ]);
-
+        
         $timecard = Timecard::findOrFail($break->timecard_id);
-        $timecard->update([
-            'is_working' => TRUE,
-            'done_lunch' => TRUE
-        ]);
+        if($diff_in_minutes > 1){
+            $timecard->update([
+                'is_working' => TRUE,
+                'done_lunch' => TRUE,
+                'overbreak' => TRUE
+            ]);
+        }else{
+            $timecard->update([
+                'is_working' => TRUE,
+                'done_lunch' => TRUE
+            ]);
+        }
+        
         $schedule = $break->with('schedule')->latest()->limit(1)->get();
         return /*$schedule->schedule[0]->time_out*/$schedule[0]->schedule->time_out;
     }

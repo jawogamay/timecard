@@ -57,7 +57,8 @@ class UserInfoController extends Controller
             'schedule' => 'required',
             'position' => 'required',
             'department' => 'required',
-            'details' => 'required'
+            'details' => 'required',
+            'name' => 'required'
         ]);
 
         UserInfo::create([
@@ -65,7 +66,8 @@ class UserInfoController extends Controller
             'schedule_id' => $request['schedule'],
             'department' => $request['department'],
             'position' => $request['position'],
-            'details' => $request['details']
+            'details' => $request['details'],
+            'name' => $request['name']
         ]);
         return 'Success';
     }

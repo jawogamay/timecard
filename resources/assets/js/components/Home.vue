@@ -19,7 +19,7 @@
                     </button>
                     <button class="btn btn-info" v-if="other.length && other[0].stopped_at == null" @click="backToWorking(other[0].id)">Clock Out Others</button>
                 </div>
-                <div class="pull-right">
+                <!-- <div class="pull-right">
                     <div v-if="!fbreak.length && !timecard[0].done_fbreak" class="pull-right" style="margin-left:10px;">
                         <button class="btn btn-warning" @click="clockFirstbreak(timecard[0])">First Break</button>
                     </div>
@@ -30,8 +30,8 @@
                     </button>
                     <button class="btn btn-info" v-if="fbreak.length && fbreak[0].stopped_at == null" @click="backToWorkingBreak(fbreak[0].id)">Back To Working</button>
                 </div>
-                </div>
-                 <div class="pull-right">
+                </div> -->
+                 <!-- <div class="pull-right">
                     <div v-if="!lbreak.length && !timecard[0].done_lunch" class="pull-right" style="margin-left:10px;">
                         <button class="btn btn-info" @click="clockLunchbreak(timecard[0])">Lunch Break</button>
                     </div>
@@ -42,8 +42,20 @@
                     </button>
                     <button class="btn btn-info" v-if="lbreak.length && lbreak[0].stopped_at == null" @click="backToWorkingLBreak(lbreak[0].id)">Back To Working</button>
                 </div>
+                </div> -->
+                   <div class="pull-right">
+                    <div v-if="!lbreak.length" class="pull-right" style="margin-left:10px;">
+                        <button class="btn btn-info" @click="clockLunchbreak(timecard[0])">Lunch Break</button>
+                    </div>
+
+                    <div class="pull-right" v-else>
+                    <button class="btn btn-info" style="margin-left:10px;" @click="clockLunchbreak(timecard[0])" v-if="lbreak[0].stopped_at != null && !timecard[0].done_lunch ">
+                        Lunch Break
+                    </button>
+                    <button class="btn btn-info" v-if="lbreak.length && lbreak[0].stopped_at == null" @click="backToWorkingLBreak(lbreak[0].id)">Back To Working</button>
                 </div>
-                <div class="pull-right">
+                </div>
+                <!-- <div class="pull-right">
                     <div v-if="!ltbreak.length && !timecard[0].done_lbreak" class="pull-right" style="margin-left:10px;">
                         <button class="btn btn-success" @click="clockLastbreak(timecard[0])">Last Break</button>
                     </div>
@@ -54,13 +66,15 @@
                     </button>
                     <button class="btn btn-info" v-if="ltbreak.length && ltbreak[0].stopped_at == null" @click="backToWorkingLtBreak(ltbreak[0].id)">Back To Working</button>
                 </div>
-                </div>
+                </div> -->
 
             </div>
             <br>
             <!-- <strong>{{ activeTimerString }}</strong> -->
+            <div v-show="!timecard[0].is_working && timecard[0].work_flag ==1">
             <b>{{calculateHours(timecard)}} </b>
-            <b class="text-danger" v-if="timecard[0].work_flag ==1">Undertime</b>
+            <b class="text-danger">Undertime</b>
+            </div>
         </div>
         <modal>
             <form @submit.prevent = "clockOthers()">
@@ -175,7 +189,9 @@ import Modal from './Reusable/ModalSmall.vue'
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
+                    showLoaderOnConfirm: true,
                     confirmButtonText: 'Yes'
+                    
                 }).then((result) => {
                     if(result.value){
                         axios.put('/others/'+id).then(() => {
@@ -221,6 +237,7 @@ import Modal from './Reusable/ModalSmall.vue'
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
+                    showLoaderOnConfirm: true,
                     confirmButtonText: 'Yes'
                 }).then((result) => {
                     if(result.value){
@@ -288,7 +305,7 @@ import Modal from './Reusable/ModalSmall.vue'
                 this.form.timecard_id = lunchbreak.id 
                swal.fire({
                     title: 'Lunch Break',
-                    text: "Press the Yes Button To First Break",
+                    text: "Press the Yes Button To Lunch Break",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -352,7 +369,8 @@ import Modal from './Reusable/ModalSmall.vue'
                     })
                     Fire.$emit('createdClocks');
                     Fire.$emit('createdCoaching')
-                    this.form.reset()                    
+                    this.form.reset()     
+                    window.location.reload()               
                 });
             },
             getOthers(){
@@ -361,27 +379,48 @@ import Modal from './Reusable/ModalSmall.vue'
                 });
             },
             clockin(){
-                swal.fire({
-                    title: 'Clock In',
-                    text: "Press the Yes Button To Clock In",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes'
-                }).then((result)=> {
-                    if(result.value){
-                        axios.post('/timecard').then((response)=> {
-                            this.isWorking = true;
-                            toast.fire({
-                                icon:'success',
-                                title:'Clock In Submitted'
-                            })
-                            Fire.$emit('createdClocks')
-                            this.startTimer(response.data)
+                // swal.fire({
+                //     title: 'Clock In',
+                //     text: "Press the Yes Button To Clock In",
+                //      type: 'input',                   
+                //     showCancelButton: true,
+                //     confirmButtonColor: '#3085d6',
+                //     cancelButtonColor: '#d33',
+                //     confirmButtonText: 'Yes'
+                // }).then((result)=> {
+                //     if(result.value){
+                //         axios.post('/timecard').then((response)=> {
+                //             this.isWorking = true;
+                //             toast.fire({
+                //                 icon:'success',
+                //                 title:'Clock In Submitted'
+                //             })
+                //             Fire.$emit('createdClocks')
+                //             this.startTimer(response.data)
+                //         })
+                //     }
+                // })
+                const { value: reason } =  swal.fire({
+                title: 'Optional if you are late',
+                input: 'text',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: false,
+                inputPlaceholder: 'Type your reason here why you late'
+                }).then((reason)=> {
+                  if(reason){
+                        axios.post('/timecard',{reason:reason.value}).then((response)=> {
+                        this.isWorking = true;
+                        toast.fire({
+                            icon:'success',
+                            title:'Clock In Submitted'
                         })
-                    }
+                        Fire.$emit('createdClocks')
+                        this.startTimer(response.data)
+                    })
+                  }
                 })
+
+
             },
             createOthers(others){
                 $('#addNew').modal('show')
@@ -396,7 +435,9 @@ import Modal from './Reusable/ModalSmall.vue'
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
+                    showLoaderOnConfirm: true,
                     confirmButtonText: 'Yes'
+                    
                 }).then((result)=> {
                     if(result.value){
                         axios.put('/updatetimecard/'+id).then(()=> {

@@ -13,6 +13,12 @@
                       </select>
                     </div>
                 </div>
+                 <div class="form-group">
+                    <label class="control-label col-sm-2" for="name">Name:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="name" placeholder="Enter Name" v-model="form.name">
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="schedule">Schedule:</label>
                     <div class="col-sm-10">
@@ -51,16 +57,17 @@
                     <th> Position </td>
                    <th> Sched Clock in </th>
                     <th> Sched Clock out </th>
-                
+                    <th>Action </th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="userinfo in userinfos">
-                    <td>{{userinfo.user.name}}</td>
+                    <td>{{userinfo.name}}</td>
                     <td>{{userinfo.department}}</td>
                     <td>{{userinfo.position}}</td>
                     <td>{{userinfo.schedule.time_in}}</td>
                     <td>{{userinfo.schedule.time_out}}</td>
+                    <td><button class="btn btn-primary">Edit</button> </td>
                 </tr>
             </tbody>
         </table>
@@ -81,6 +88,7 @@ import Modal from './Reusable/Modal.vue'
                 schedules:[],
                 form:new Form({
                     user:'',
+                    name:'',
                     schedule:'',
                     position:'',
                     details:'',

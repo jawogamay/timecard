@@ -28,7 +28,7 @@
                     <td>{{lunchbreak.id}} </td> 
                     <td>{{lunchbreak.userinfo.user.name}}</td>
                     <td> {{lunchbreak.started_at | dateWithTime}} </td>
-                    <td> {{lunchbreak.stopped_at | dateWithTime}} </td>
+                    <td> {{lunchbreak.stopped_at | dateWithTime}} <span class="btn btn-danger btn-xs" v-if="clock.minutes>60">Overbreak</span></td>
                     <td>{{parseDate(lunchbreak.started_at,lunchbreak.stopped_at)}}&nbsp;<span class="btn btn-danger btn-xs" v-if="parseDate(lunchbreak.started_at,lunchbreak.stopped_at)>75">Over Lunch</span></td>
                 </tr>
             </tbody>

@@ -48,7 +48,7 @@ class TimecardController extends Controller
         //
     }
     public function reactivateTimecard(){
-         return Timecard::whereBetween('updated_at', [now()->subHours(1), now()])->where('time_out','!=',null)->with(['userinfo.user','userinfo.schedule'])->get();
+         return Timecard::whereBetween('updated_at', [now()->subHours(1), now()])->where('time_out','!=',null)->with(['userinfo.user','userinfo.schedule'])->latest();
     }
 
     public function reactivateUser($id){
@@ -83,7 +83,8 @@ class TimecardController extends Controller
             'late_flag' => True,
             'userinfo_id' => Auth::user()->id,
             'is_working' => TRUE,
-            'time_outexpire' => $date
+            'time_outexpire' => $date,
+            'reason' => $request['reason']
 
         ]);
         }else{
@@ -91,6 +92,7 @@ class TimecardController extends Controller
             'time_in' => NOW(),
             'userinfo_id' => Auth::user()->id,
             'is_working' => TRUE,
+            'reason' => $request['reason'],
             'time_outexpire' => $date
         ]);
         }

@@ -27,6 +27,7 @@ class CreateTimecardsTable extends Migration
             $table->boolean('done_lunch')->default(FALSE);
             $table->boolean('done_lbreak')->default(FALSE);
             $table->timestamp('fbreak_out')->nullable();
+            $table->string('reason')->nullable();
          /*   $table->unsignedInteger('user_id');*/
             $table->boolean('overbreak')->default(FALSE);
             $table->timestamp('time_outexpire');

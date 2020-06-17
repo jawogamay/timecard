@@ -8,7 +8,7 @@ class UserInfo extends Model
 {
     //
     protected $fillable = [
-        'user_id','schedule_id','department','position','details'
+        'user_id','schedule_id','department','position','details','name'
     ];
 
     public function schedule(){

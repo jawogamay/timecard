@@ -56,7 +56,7 @@ class OtherController extends Controller
             'started_at' => NOW(),
             'timecard_id' => $request['timecard_id']
         ]);
-        
+        Auth::logout();
         return 'Success';
     }
 
