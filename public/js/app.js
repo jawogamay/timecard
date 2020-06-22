@@ -71705,10 +71705,6 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(225)
-}
 var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(227)
@@ -71717,7 +71713,7 @@ var __vue_template__ = __webpack_require__(228)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = injectStyle
+var __vue_styles__ = null
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -71752,53 +71748,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 225 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(226);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(6)("bb6636ae", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-24f880b6\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RealtimeOthers.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-24f880b6\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RealtimeOthers.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 226 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(4)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n.project-title {\n    margin: 0;\n}\n.panel-heading > h4 {\n    margin:0;\n    position: relative;\n    top: 6px;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
+/* 225 */,
+/* 226 */,
 /* 227 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_moment__);
 //
 //
 //
@@ -71822,214 +71778,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            projects: null,
-            newTimerName: '',
-            newProjectName: '',
-            activeTimerString: 'Calculating...',
-            counter: { seconds: 0, timer: null }
+            firstbreaktimes: []
         };
+    },
+    mounted: function mounted() {
+        this.getRealTimeOthers();
     },
 
     methods: {
-        /**
-         * Conditionally pads a number with "0"
-         */
-        _padNumber: function _padNumber(number) {
-            return number > 9 || number === 0 ? number : "0" + number;
-        },
-        /**
-         * Splits seconds into hours, minutes, and seconds.
-         */
-        _readableTimeFromSeconds: function _readableTimeFromSeconds(seconds) {
-            var hours = 3600 > seconds ? 0 : parseInt(seconds / 3600, 10);
-            return {
-                hours: this._padNumber(hours),
-                seconds: this._padNumber(seconds % 60),
-                minutes: this._padNumber(parseInt(seconds / 60, 10) % 60)
-            };
-        },
-        /**
-         * Calculate the amount of time spent on the project using the timer object.
-         */
-        calculateTimeSpent: function calculateTimeSpent(timer) {
-            if (timer.stopped_at) {
-                var started = __WEBPACK_IMPORTED_MODULE_0_moment___default()(timer.created_at);
-                var stopped = __WEBPACK_IMPORTED_MODULE_0_moment___default()(timer.stopped_at);
-                var time = this._readableTimeFromSeconds(parseInt(__WEBPACK_IMPORTED_MODULE_0_moment___default.a.duration(stopped.diff(started)).asSeconds()));
-                return time.hours + ' Hours | ' + time.minutes + ' mins | ' + time.seconds + ' seconds';
-            }
-            return '';
-        },
-        /**
-         * Determines if there is an active timer and whether it belongs to the project
-         * passed into the function.
-         */
-        showTimerForProject: function showTimerForProject(project, timer) {
-            return this.counter.timer && this.counter.timer.id === timer.id && this.counter.timer.project.id === project.id;
-        },
-        /**
-         * Start counting the timer. Tick tock.
-         */
-        startTimer: function startTimer(project, timer) {
-            var vm = this;
-            var started = __WEBPACK_IMPORTED_MODULE_0_moment___default()(timer.started_at);
-            vm.counter.timer = timer;
-            vm.counter.timer.project = project;
-            vm.counter.seconds = parseInt(__WEBPACK_IMPORTED_MODULE_0_moment___default.a.duration(__WEBPACK_IMPORTED_MODULE_0_moment___default()().diff(started)).asSeconds());
-            vm.counter.ticker = setInterval(function () {
-                var time = vm._readableTimeFromSeconds(++vm.counter.seconds);
-                vm.activeTimerString = time.hours + ' Hours | ' + time.minutes + ':' + time.seconds;
-            }, 1000);
-        },
-        /**
-         * Stop the timer from the API and then from the local counter.
-         */
-        stopTimer: function stopTimer() {
+        getRealTimeOthers: function getRealTimeOthers() {
             var _this = this;
 
-            window.axios.post('/projects/' + this.counter.timer.id + '/timers/stop').then(function (response) {
-                // Loop through the projects and get the right project...
-                _this.projects.forEach(function (project) {
-                    if (project.id === parseInt(_this.counter.timer.project.id)) {
-                        // Loop through the timers of the project and set the `stopped_at` time
-                        return project.timers.forEach(function (timer) {
-                            if (timer.id === parseInt(_this.counter.timer.id)) {
-                                return timer.stopped_at = response.data.stopped_at;
-                            }
-                        });
-                    }
-                });
-                // Stop the ticker
-                clearInterval(_this.counter.ticker);
-                // Reset the counter and timer string
-                _this.counter = { seconds: 0, timer: null };
-                _this.activeTimerString = 'Calculating...';
+            axios.get('/getRealTimeOthers').then(function (_ref) {
+                var data = _ref.data;
+                return _this.firstbreaktimes = data;
             });
-        },
-        /**
-         * Create a new timer.
-         */
-        createTimer: function createTimer(project) {
-            var _this2 = this;
-
-            window.axios.post('/projects/' + project.id + '/timers', { name: this.newTimerName }).then(function (response) {
-                project.timers.push(response.data);
-                _this2.startTimer(response.data.project, response.data);
-            });
-            this.newTimerName = '';
-        },
-        /**
-         * Create a new project.
-         */
-        createProject: function createProject() {
-            var _this3 = this;
-
-            window.axios.post('/projects', { name: this.newProjectName }).then(function (response) {
-                return _this3.projects.push(response.data);
-            });
-            this.newProjectName = '';
         }
-    },
-    created: function created() {
-        var _this4 = this;
-
-        window.axios.get('/projects').then(function (response) {
-            _this4.projects = response.data;
-            window.axios.get('/project/timers/active').then(function (response) {
-                if (response.data.id !== undefined) {
-                    _this4.startTimer(response.data.project, response.data);
-                }
-            });
-        });
     }
 });
 
@@ -72041,349 +71809,77 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-    _vm.projects
-      ? _c("div", { staticClass: "no-projects" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("hr"),
-          _vm._v(" "),
-          _vm.projects.length > 0
-            ? _c(
-                "div",
-                [
-                  _vm._l(_vm.projects, function(project) {
-                    return _c(
-                      "div",
-                      { key: project.id, staticClass: "panel panel-default" },
-                      [
-                        _c("div", { staticClass: "panel-heading clearfix" }, [
-                          _c("h4", { staticClass: "pull-left" }, [
-                            _vm._v(_vm._s(project.name))
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-success btn-sm pull-right",
-                              attrs: {
-                                disabled: _vm.counter.timer,
-                                "data-toggle": "modal",
-                                "data-target": "#timerCreate"
-                              },
-                              on: {
-                                click: function($event) {
-                                  _vm.selectedProject = project
-                                }
-                              }
-                            },
-                            [
-                              _c("i", {
-                                staticClass: "glyphicon glyphicon-plus"
-                              }),
-                              _vm._v("Add\n                    ")
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "panel-body" }, [
-                          project.timers.length > 0
-                            ? _c(
-                                "ul",
-                                { staticClass: "list-group" },
-                                _vm._l(project.timers, function(timer) {
-                                  return _c(
-                                    "li",
-                                    {
-                                      key: timer.id,
-                                      staticClass: "list-group-item clearfix"
-                                    },
-                                    [
-                                      _c(
-                                        "strong",
-                                        { staticClass: "timer-name" },
-                                        [_vm._v(_vm._s(timer.name))]
-                                      ),
-                                      _vm._v(" "),
-                                      _c("div", { staticClass: "pull-right" }, [
-                                        _vm.showTimerForProject(project, timer)
-                                          ? _c(
-                                              "span",
-                                              {
-                                                staticStyle: {
-                                                  "margin-right": "10px"
-                                                }
-                                              },
-                                              [
-                                                _c("strong", [
-                                                  _vm._v(
-                                                    _vm._s(
-                                                      _vm.activeTimerString
-                                                    )
-                                                  )
-                                                ])
-                                              ]
-                                            )
-                                          : _c(
-                                              "span",
-                                              {
-                                                staticStyle: {
-                                                  "margin-right": "10px"
-                                                }
-                                              },
-                                              [
-                                                _c("strong", [
-                                                  _vm._v(
-                                                    _vm._s(
-                                                      _vm.calculateTimeSpent(
-                                                        timer
-                                                      )
-                                                    )
-                                                  )
-                                                ])
-                                              ]
-                                            ),
-                                        _vm._v(" "),
-                                        _vm.showTimerForProject(project, timer)
-                                          ? _c(
-                                              "button",
-                                              {
-                                                staticClass:
-                                                  "btn btn-sm btn-danger",
-                                                on: {
-                                                  click: function($event) {
-                                                    return _vm.stopTimer()
-                                                  }
-                                                }
-                                              },
-                                              [
-                                                _c(
-                                                  "i",
-                                                  {
-                                                    staticClass:
-                                                      "glyphicon glyphicon-stop"
-                                                  },
-                                                  [_vm._v("Stop")]
-                                                )
-                                              ]
-                                            )
-                                          : _vm._e()
-                                      ])
-                                    ]
-                                  )
-                                }),
-                                0
-                              )
-                            : _c("p", [
-                                _vm._v(
-                                  'Nothing has been recorded for "' +
-                                    _vm._s(project.name) +
-                                    '". Click the play icon to record.'
-                                )
-                              ])
-                        ])
-                      ]
-                    )
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass: "modal fade",
-                      attrs: { id: "timerCreate", role: "dialog" }
-                    },
+  return _c(
+    "table",
+    { staticClass: "table table-hover table-striped table-bordered" },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.firstbreaktimes, function(firstbreak) {
+          return _c("tr", [
+            _c("td", [_vm._v(_vm._s(firstbreak.userinfo.user.name))]),
+            _vm._v(" "),
+            _c(
+              "td",
+              [
+                _c("countdown", {
+                  attrs: {
+                    time: new Date(firstbreak.time_outexpire) - new Date()
+                  },
+                  scopedSlots: _vm._u(
                     [
-                      _c("div", { staticClass: "modal-dialog modal-sm" }, [
-                        _c("div", { staticClass: "modal-content" }, [
-                          _vm._m(1),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "modal-body" }, [
-                            _c("div", { staticClass: "form-group" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.newTimerName,
-                                    expression: "newTimerName"
-                                  }
-                                ],
-                                staticClass: "form-control",
-                                attrs: {
-                                  type: "text",
-                                  id: "usrname",
-                                  placeholder: "What are you working on?"
-                                },
-                                domProps: { value: _vm.newTimerName },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.newTimerName = $event.target.value
-                                  }
-                                }
-                              })
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "modal-footer" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-default btn-primary",
-                                attrs: {
-                                  "data-dismiss": "modal",
-                                  disabled: _vm.newTimerName === "",
-                                  type: "submit"
-                                },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.createTimer(_vm.selectedProject)
-                                  }
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "glyphicon glyphicon-play"
-                                }),
-                                _vm._v(" Start")
-                              ]
-                            )
-                          ])
-                        ])
-                      ])
-                    ]
-                  )
-                ],
-                2
-              )
-            : _c("div", [
-                _c("h3", { attrs: { align: "center" } }, [
-                  _vm._v("You need to create a new project")
-                ])
-              ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "modal fade",
-              attrs: { id: "projectCreate", role: "dialog" }
-            },
-            [
-              _c("div", { staticClass: "modal-dialog modal-sm" }, [
-                _c("div", { staticClass: "modal-content" }, [
-                  _vm._m(2),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "modal-body" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.newProjectName,
-                            expression: "newProjectName"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          id: "usrname",
-                          placeholder: "Project Name"
-                        },
-                        domProps: { value: _vm.newProjectName },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.newProjectName = $event.target.value
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "modal-footer" }, [
-                    _c(
-                      "button",
                       {
-                        staticClass: "btn btn-default btn-primary",
-                        attrs: {
-                          "data-dismiss": "modal",
-                          disabled: _vm.newProjectName == "",
-                          type: "submit"
-                        },
-                        on: { click: _vm.createProject }
-                      },
-                      [_vm._v("Create")]
-                    )
-                  ])
-                ])
-              ])
-            ]
-          )
-        ])
-      : _c("div", { staticClass: "timers" }, [
-          _vm._v("\n        Loading...\n    ")
-        ])
-  ])
+                        key: "default",
+                        fn: function(props) {
+                          return [
+                            _vm._v(
+                              _vm._s(props.hours) +
+                                " hours, " +
+                                _vm._s(props.minutes) +
+                                " minutes, " +
+                                _vm._s(props.seconds) +
+                                " seconds."
+                            )
+                          ]
+                        }
+                      }
+                    ],
+                    null,
+                    true
+                  )
+                }),
+                _vm._v(" ")
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("td", [
+              _vm._v(
+                " " + _vm._s(_vm._f("dateWithTime")(firstbreak.started_at))
+              )
+            ])
+          ])
+        }),
+        0
+      )
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-sm-12" }, [
-        _c("h2", { staticClass: "pull-left project-title" }, [
-          _vm._v("Timecard")
-        ]),
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v(" Name ")]),
         _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary btn-sm pull-right",
-            attrs: { "data-toggle": "modal", "data-target": "#projectCreate" }
-          },
-          [_vm._v("New Project")]
-        )
+        _c("th", [_vm._v(" Time ")]),
+        _vm._v(" "),
+        _c("th", [_vm._v(" Others In ")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("×")]
-      ),
-      _vm._v(" "),
-      _c("h4", { staticClass: "modal-title" }, [_vm._v("Record Time")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("×")]
-      ),
-      _vm._v(" "),
-      _c("h4", { staticClass: "modal-title" }, [_vm._v("New Project")])
     ])
   }
 ]

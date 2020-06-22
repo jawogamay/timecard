@@ -20,6 +20,7 @@ class CreateOthersTable extends Migration
             $table->unsignedInteger('timecard_id');
             $table->timestamp('started_at');
             $table->timestamp('stopped_at')->nullable();
+            $table->timestamp('time_outexpire');
              $table->double('hours')->default(0);
             $table->double('minutes')->default(0);
             $table->timestamps();

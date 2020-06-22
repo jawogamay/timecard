@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Other;
 use App\Timecard;
 use Auth;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 class OtherController extends Controller
 {
@@ -37,7 +38,10 @@ class OtherController extends Controller
     {
         //
     }
-
+    public function getRealTimeOthers(){
+        return Other::whereBetween('created_at', [now()->subHours(12), now()])->where('stopped_at',null)->with(['userinfo.user','userinfo.schedule'])->get();
+    }
+   
     /**
      * Store a newly created resource in storage.
      *
@@ -47,6 +51,7 @@ class OtherController extends Controller
     public function store(Request $request)
     {
         //
+        $date = Carbon::parse(NOW())->addHour(9);
         $this->validate($request,[
             'description' => 'required'
         ]);
@@ -54,7 +59,8 @@ class OtherController extends Controller
             'name' => $request['description'],
             'userinfo_id' => Auth::user()->id,
             'started_at' => NOW(),
-            'timecard_id' => $request['timecard_id']
+            'timecard_id' => $request['timecard_id'],
+            'time_outexpire' => $date
         ]);
         Auth::logout();
         return 'Success';

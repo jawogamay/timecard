@@ -42,4 +42,5 @@ Route::any('/reactivateUser/{id}','TimecardController@reactivateUser');
 Route::get('getTimecardAll','TimecardController@getTimecardAll');
 Route::get('getRealtime','TimecardController@getRealtime');
 Route::get('/getRealtimeLunch','LunchbreakController@getRealtimeLunch');
+Route::get('/getRealTimeOthers','OtherController@getRealTimeOthers');
 Route::get('/{path}',"HomeController@index")->where( 'path', '.*' );
