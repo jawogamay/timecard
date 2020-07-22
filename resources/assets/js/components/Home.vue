@@ -369,7 +369,6 @@ import Modal from './Reusable/ModalSmall.vue'
                     })
                     Fire.$emit('createdClocks');
                     Fire.$emit('createdCoaching')
-                    this.form.reset()     
                     window.location.reload()               
                 });
             },
@@ -423,8 +422,31 @@ import Modal from './Reusable/ModalSmall.vue'
 
             },
             createOthers(others){
-                $('#addNew').modal('show')
-                this.form.timecard_id = others.id
+                // $('#addNew').modal('show')
+                 
+                const { value: description } =  swal.fire({
+                title: 'Others Clock In',
+                input: 'text',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: false,
+                inputPlaceholder: 'Enter Description'
+                }).then((description)=> {
+                    
+                  if(description){
+                        axios.post('/others',{description:description.value,timecard_id:others.id}).then((response)=> {
+                        this.isWorking = true;
+                        toast.fire({
+                            icon:'success',
+                            title:'Clock In Submitted'
+                        })
+                        Fire.$emit('createdClocks')
+                        this.startTimer(response.data)
+                         Fire.$emit('createdCoaching')
+                        window.location.reload()   
+                    })
+                  }
+                })
+
                 
             },
             clockout(id){

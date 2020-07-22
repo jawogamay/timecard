@@ -23,7 +23,7 @@
                     <th>Minutes Spent </th>
                 </tr>
             </thead>
-            <tbody v-if="show">
+            <!-- <tbody v-if="show">
                  <tr v-for="lastbreak in lastbreaks">
                     <td>{{lastbreak.id}} </td> 
                     <td>{{lastbreak.userinfo.user.name}}</td>
@@ -31,7 +31,7 @@
                     <td> {{lastbreak.stopped_at | dateWithTime}} </td>
                     <td>{{parseDate(lastbreak.started_at,lastbreak.stopped_at)}}&nbsp;<span class="btn btn-danger btn-xs" v-if="parseDate(lastbreak.started_at,lastbreak.stopped_at)>75">Over Lunch</span></td>
                 </tr>
-            </tbody>
+            </tbody> -->
         </table>
     </div>
 </template>
